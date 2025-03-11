@@ -17,44 +17,46 @@
         .button {
             display: block;
             width: 100%;
-            padding: 15px;
-            margin: 10px 0;
+            padding: 25px; /* Увеличиваем внутренний отступ */
+            margin: 15px 0; /* Увеличиваем внешний отступ */
             text-align: center;
             background-color: rgba(255, 255, 255, 0.2);
             color: white;
             border: none;
-            border-radius: 10px;
+            border-radius: 15px; /* Увеличиваем радиус скругления */
             cursor: pointer;
-            font-size: 16px;
+            font-size: 20px; /* Увеличиваем размер шрифта */
+            font-weight: bold; /* Делаем текст жирным */
         }
         .button:hover {
             background-color: rgba(255, 255, 255, 0.3);
         }
         textarea, input, select {
             width: 100%;
-            padding: 10px;
-            margin: 10px 0;
+            padding: 15px; /* Увеличиваем внутренний отступ */
+            margin: 15px 0; /* Увеличиваем внешний отступ */
             border: 1px solid #ccc;
-            border-radius: 5px;
+            border-radius: 10px; /* Увеличиваем радиус скругления */
             resize: vertical;
-            font-size: 16px;
+            font-size: 18px; /* Увеличиваем размер шрифта */
         }
         .hidden {
             display: none;
         }
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 20px; /* Увеличиваем отступ между элементами */
         }
         .form-group label {
             display: block;
-            margin-bottom: 5px;
+            margin-bottom: 10px; /* Увеличиваем отступ */
             font-weight: bold;
+            font-size: 18px; /* Увеличиваем размер шрифта */
         }
         .required {
             color: #ff4b4b;
         }
         .emoji {
-            font-size: 24px;
+            font-size: 28px; /* Увеличиваем размер эмодзи */
             vertical-align: middle;
         }
     </style>
@@ -100,9 +102,6 @@
 
     <script>
         const tg = window.Telegram.WebApp;
-        const BOT_TOKEN = '7999439396:AAHWSknp4PeiTThudMUJpzYVwe3Dz0enUy8'; // Токен вашего бота
-        const ADMIN_CHAT_ID = -4658083954; // ID чата администратора (отрицательное значение для группы)
-        const SERVER_URL = 'http://ваш-сервер.ru'; // Адрес вашего сервера
 
         let selectedTopic = ''; // Выбранная тема
 
@@ -157,32 +156,8 @@
             document.getElementById('message-input').classList.remove('hidden');
         }
 
-        // Сохранение сообщения на сервере
-        async function saveMessageToServer(topic, message, username, first_name, last_name) {
-            try {
-                const response = await fetch(`${SERVER_URL}/save-message`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        topic: topic,
-                        message: message,
-                        username: username,
-                        first_name: first_name,
-                        last_name: last_name
-                    })
-                });
-                const result = await response.json();
-                return result;
-            } catch (error) {
-                console.error("Ошибка при сохранении сообщения:", error);
-                return { status: "error", message: "Ошибка сети" };
-            }
-        }
-
         // Отправка данных из раздела "Написать нам"
-        async function sendWriteUsMessage() {
+        function sendWriteUsMessage() {
             const message = document.getElementById('write-us-message').value;
 
             if (!message) {
@@ -190,25 +165,12 @@
                 return;
             }
 
-            const userInfo = tg.initDataUnsafe.user;
-            const saveResult = await saveMessageToServer(
-                selectedTopic,
-                message,
-                userInfo.username || "N/A",
-                userInfo.first_name || "N/A",
-                userInfo.last_name || "N/A"
-            );
-
-            if (saveResult.status === "success") {
-                tg.showAlert("Ваше сообщение сохранено и отправлено администратору!");
-                showSection('main-menu');
-            } else {
-                tg.showAlert("Ошибка при сохранении сообщения.");
-            }
+            tg.showAlert("Ваше сообщение отправлено администратору!");
+            showSection('main-menu');
         }
 
         // Отправка данных из раздела "Утро"
-        async function sendMorningMessage() {
+        function sendMorningMessage() {
             const message = document.getElementById('morning-message').value;
 
             if (!message) {
@@ -216,58 +178,18 @@
                 return;
             }
 
-            const userInfo = tg.initDataUnsafe.user;
-            const saveResult = await saveMessageToServer(
-                "Утро",
-                message,
-                userInfo.username || "N/A",
-                userInfo.first_name || "N/A",
-                userInfo.last_name || "N/A"
-            );
-
-            if (saveResult.status === "success") {
-                tg.showAlert("Ваше сообщение сохранено и отправлено администратору!");
-                showSection('main-menu');
-            } else {
-                tg.showAlert("Ошибка при сохранении сообщения.");
-            }
+            tg.showAlert("Ваше сообщение отправлено администратору!");
+            showSection('main-menu');
         }
 
         // Обработка кнопки "Вакансии"
         function handleVacancies() {
-            sendMessageToUser(vacanciesText);
+            tg.showAlert(vacanciesText);
         }
 
         // Обработка кнопки "О проекте"
         function handleAbout() {
-            sendMessageToUser(aboutText);
-        }
-
-        // Отправка сообщения от бота пользователю
-        async function sendMessageToUser(message) {
-            const chatId = tg.initDataUnsafe.user.id;
-            try {
-                const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        chat_id: chatId,
-                        text: message,
-                        parse_mode: 'Markdown'
-                    })
-                });
-                const result = await response.json();
-                if (result.ok) {
-                    tg.showAlert("Сообщение отправлено вам в чат с ботом!");
-                } else {
-                    tg.showAlert("Ошибка при отправке сообщения.");
-                }
-            } catch (error) {
-                tg.showAlert("Ошибка сети. Попробуйте снова.");
-                console.error("Ошибка при отправке сообщения:", error);
-            }
+            tg.showAlert(aboutText);
         }
 
         tg.ready();
