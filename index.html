@@ -84,7 +84,7 @@
             color: white;
         }
         .file-preview .remove-file {
-            color: #ff1a1a; /* Более тёмный и насыщенный красный */
+            color: #ff1a1a;
             cursor: pointer;
             font-size: 14px;
             font-weight: bold;
@@ -275,8 +275,11 @@
             }
 
             // Скрываем превью и сбрасываем input
-            document.getElementById(`${sectionId}-preview`).classList.add('hidden');
-            document.getElementById(`${sectionId}-file`).value = '';
+            const filePreview = document.getElementById(`${sectionId}-preview`);
+            const fileInput = document.getElementById(`${sectionId}-file`);
+            filePreview.classList.add('hidden');
+            filePreview.innerHTML = ''; // Очищаем содержимое превью
+            fileInput.value = ''; // Сбрасываем значение input
         }
 
         // Отправка сообщения из раздела "Написать нам"
@@ -307,7 +310,7 @@
                     // Отправка файлов через FormData
                     const formData = new FormData();
                     formData.append('chat_id', ADMIN_CHAT_ID);
-                    formData.append('caption', adminMessage);
+                    formData.append('caption', `${adminMessage}\n\n📎 Файл: ${writeUsFiles[0].name}`); // Добавляем название файла
                     formData.append('parse_mode', 'Markdown');
                     writeUsFiles.forEach((file, index) => {
                         formData.append('document', file, `file_${index}`);
@@ -385,7 +388,7 @@
                     // Отправка файлов через FormData
                     const formData = new FormData();
                     formData.append('chat_id', ADMIN_CHAT_ID);
-                    formData.append('caption', adminMessage);
+                    formData.append('caption', `${adminMessage}\n\n📎 Файл: ${morningFiles[0].name}`); // Добавляем название файла
                     formData.append('parse_mode', 'Markdown');
                     morningFiles.forEach((file, index) => {
                         formData.append('document', file, `file_${index}`);
