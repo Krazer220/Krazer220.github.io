@@ -82,6 +82,13 @@
             max-width: 100%;
             border-radius: 10px;
         }
+        .remove-file {
+            display: block;
+            margin-top: 10px;
+            color: #ff4b4b;
+            cursor: pointer;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -192,11 +199,32 @@
 
                 // Показ превью
                 if (file.type.startsWith('image/')) {
-                    filePreview.innerHTML = `<img src="${URL.createObjectURL(file)}" alt="Превью">`;
+                    filePreview.innerHTML = `
+                        <img src="${URL.createObjectURL(file)}" alt="Превью">
+                        <div class="remove-file" onclick="removeFile('${sectionId}')">❌ Удалить файл</div>
+                    `;
                 } else if (file.type.startsWith('video/')) {
-                    filePreview.innerHTML = `<video controls src="${URL.createObjectURL(file)}"></video>`;
+                    filePreview.innerHTML = `
+                        <video controls src="${URL.createObjectURL(file)}"></video>
+                        <div class="remove-file" onclick="removeFile('${sectionId}')">❌ Удалить файл</div>
+                    `;
                 }
             }
+        }
+
+        // Удаление файла
+        function removeFile(sectionId) {
+            const fileInput = document.getElementById(`${sectionId}-file`);
+            const filePreview = document.getElementById(`${sectionId}-preview`);
+
+            if (sectionId === 'write-us') {
+                writeUsFileData = null;
+            } else if (sectionId === 'morning') {
+                morningFileData = null;
+            }
+
+            fileInput.value = ''; // Очистка input
+            filePreview.innerHTML = ''; // Очистка превью
         }
 
         // Отправка сообщения из раздела "Написать нам"
