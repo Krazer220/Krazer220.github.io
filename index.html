@@ -286,7 +286,7 @@
         async function sendWriteUsMessage() {
             const messageInput = document.getElementById('write-us-message');
             const submitButton = document.getElementById('write-us-submit');
-            const message = messageInput.value.trim();
+            let message = messageInput.value.trim();
 
             // Валидация сообщения
             if (!message && writeUsFiles.length === 0) {
@@ -300,6 +300,11 @@
             submitButton.textContent = 'Отправка...';
 
             const userInfo = tg.initDataUnsafe.user;
+
+            // Очистка текста от невидимых символов и экранирование специальных символов
+            message = message.replace(/[\u200B-\u200D\uFEFF]/g, ''); // Удаление невидимых символов
+            message = message.replace(/([_*\[\]()~`>#+\-=|{}.!])/g, '\\$1'); // Экранирование специальных символов
+
             const adminMessage = `📩 *Новое сообщение от пользователя:*\n\n` +
                                 `📌 Тема: ${selectedTopic}\n` +
                                 `💬 Сообщение: ${message || 'Без текста'}\n` +
@@ -380,7 +385,7 @@
         async function sendMorningMessage() {
             const messageInput = document.getElementById('morning-message');
             const submitButton = document.getElementById('morning-submit');
-            const message = messageInput.value.trim();
+            let message = messageInput.value.trim();
 
             // Валидация сообщения
             if (!message && morningFiles.length === 0) {
@@ -394,6 +399,11 @@
             submitButton.textContent = 'Отправка...';
 
             const userInfo = tg.initDataUnsafe.user;
+
+            // Очистка текста от невидимых символов и экранирование специальных символов
+            message = message.replace(/[\u200B-\u200D\uFEFF]/g, ''); // Удаление невидимых символов
+            message = message.replace(/([_*\[\]()~`>#+\-=|{}.!])/g, '\\$1'); // Экранирование специальных символов
+
             const adminMessage = `🌅 *Сообщение в Утро:*\n\n` +
                                 `💬 Сообщение: ${message || 'Без текста'}\n` +
                                 `👤 Пользователь: @${userInfo.username || 'не указан'} (${userInfo.first_name} ${userInfo.last_name || ''})`;
