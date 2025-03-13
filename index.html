@@ -134,7 +134,7 @@
     <!-- Раздел "Написать нам" -->
     <div id="write-us" class="hidden">
         <button class="button back-button" onclick="showSection('main-menu')">Назад</button>
-
+        
         <!-- Выбор темы -->
         <div id="topic-selection">
             <h3>Выберите тему:</h3>
@@ -151,14 +151,14 @@
         <!-- Поле для ввода текста и загрузки файлов -->
         <div id="message-input" class="hidden">
             <textarea id="write-us-message" placeholder="Напишите ваше сообщение..."></textarea>
-
+            
             <!-- Загрузка файлов -->
             <label for="write-us-file" class="file-label">📎 Прикрепить фото или видео (максимум 3 файла)</label>
             <input type="file" id="write-us-file" class="file-input" accept="image/*, video/*" onchange="handleFileUpload('write-us')" multiple>
-
+            
             <!-- Превью файлов -->
             <div id="write-us-preview" class="file-preview"></div>
-
+            
             <button class="button" id="write-us-submit" onclick="sendWriteUsMessage()">Отправить</button>
         </div>
     </div>
@@ -167,14 +167,14 @@
     <div id="morning" class="hidden">
         <button class="button back-button" onclick="showSection('main-menu')">Назад</button>
         <textarea id="morning-message" placeholder="Напишите ваше сообщение..."></textarea>
-
+        
         <!-- Загрузка файлов -->
         <label for="morning-file" class="file-label">📎 Прикрепить фото или видео (максимум 3 файла)</label>
         <input type="file" id="morning-file" class="file-input" accept="image/*, video/*" onchange="handleFileUpload('morning')" multiple>
-
+        
         <!-- Превью файлов -->
         <div id="morning-preview" class="file-preview"></div>
-
+        
         <button class="button" id="morning-submit" onclick="sendMorningMessage()">Отправить</button>
     </div>
 
@@ -284,7 +284,7 @@
                     `;
                 } else if (file.type.startsWith('video/')) {
                     fileElement.innerHTML = `
-                        <video controls>
+                        <video>
                             <source src="${URL.createObjectURL(file)}" type="${file.type}">
                             Ваш браузер не поддерживает видео.
                         </video>
