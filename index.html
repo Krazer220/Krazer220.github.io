@@ -386,26 +386,36 @@
 
             try {
                 if (writeUsFiles.length > 0) {
-                    // Отправляем каждый файл отдельно
-                    for (const file of writeUsFiles) {
-                        const formData = new FormData();
-                        formData.append('chat_id', ADMIN_CHAT_ID);
-                        formData.append('document', file, file.name); // Отправляем файл как документ
-                        formData.append('caption', adminMessage); // Добавляем текст сообщения
-                        formData.append('parse_mode', 'HTML');
+                    // Формируем массив медиафайлов для отправки
+                    const media = writeUsFiles.map((file, index) => {
+                        return {
+                            type: file.type.startsWith('image/') ? 'photo' : 'document',
+                            media: `attach://file_${index}`,
+                            caption: index === 0 ? adminMessage : '', // Добавляем текст только к первому файлу
+                            parse_mode: 'HTML'
+                        };
+                    });
 
-                        const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendDocument`, {
-                            method: 'POST',
-                            body: formData,
-                        });
+                    // Создаем FormData для отправки файлов
+                    const formData = new FormData();
+                    writeUsFiles.forEach((file, index) => {
+                        formData.append(`file_${index}`, file);
+                    });
+                    formData.append('chat_id', ADMIN_CHAT_ID);
+                    formData.append('media', JSON.stringify(media));
 
-                        const result = await response.json();
-                        if (!result.ok) {
-                            tg.showAlert(`Ошибка при отправке файла: ${result.description || "Неизвестная ошибка"}`);
-                            return;
-                        }
+                    // Отправляем файлы через sendMediaGroup
+                    const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMediaGroup`, {
+                        method: 'POST',
+                        body: formData,
+                    });
+
+                    const result = await response.json();
+                    if (result.ok) {
+                        tg.showAlert("Ваше сообщение и файлы отправлены администратору!");
+                    } else {
+                        tg.showAlert(`Ошибка: ${result.description || "Неизвестная ошибка"}`);
                     }
-                    tg.showAlert("Ваше сообщение и файлы отправлены администратору!");
                 } else {
                     // Отправка текстового сообщения
                     const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
@@ -470,26 +480,36 @@
 
             try {
                 if (morningFiles.length > 0) {
-                    // Отправляем каждый файл отдельно
-                    for (const file of morningFiles) {
-                        const formData = new FormData();
-                        formData.append('chat_id', ADMIN_CHAT_ID);
-                        formData.append('document', file, file.name); // Отправляем файл как документ
-                        formData.append('caption', adminMessage); // Добавляем текст сообщения
-                        formData.append('parse_mode', 'HTML');
+                    // Формируем массив медиафайлов для отправки
+                    const media = morningFiles.map((file, index) => {
+                        return {
+                            type: file.type.startsWith('image/') ? 'photo' : 'document',
+                            media: `attach://file_${index}`,
+                            caption: index === 0 ? adminMessage : '', // Добавляем текст только к первому файлу
+                            parse_mode: 'HTML'
+                        };
+                    });
 
-                        const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendDocument`, {
-                            method: 'POST',
-                            body: formData,
-                        });
+                    // Создаем FormData для отправки файлов
+                    const formData = new FormData();
+                    morningFiles.forEach((file, index) => {
+                        formData.append(`file_${index}`, file);
+                    });
+                    formData.append('chat_id', ADMIN_CHAT_ID);
+                    formData.append('media', JSON.stringify(media));
 
-                        const result = await response.json();
-                        if (!result.ok) {
-                            tg.showAlert(`Ошибка при отправке файла: ${result.description || "Неизвестная ошибка"}`);
-                            return;
-                        }
+                    // Отправляем файлы через sendMediaGroup
+                    const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMediaGroup`, {
+                        method: 'POST',
+                        body: formData,
+                    });
+
+                    const result = await response.json();
+                    if (result.ok) {
+                        tg.showAlert("Ваше сообщение и файлы отправлены администратору!");
+                    } else {
+                        tg.showAlert(`Ошибка: ${result.description || "Неизвестная ошибка"}`);
                     }
-                    tg.showAlert("Ваше сообщение и файлы отправлены администратору!");
                 } else {
                     // Отправка текстового сообщения
                     const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
