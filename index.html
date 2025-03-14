@@ -119,6 +119,9 @@
             margin-top: 5px;
             text-align: center;
         }
+        .emoji-large {
+            font-size: 40px; /* Увеличиваем размер эмодзи */
+        }
     </style>
 </head>
 <body>
@@ -314,7 +317,7 @@
                     `;
                 } else if (file.type.startsWith('video/')) {
                     fileElement.innerHTML = `
-                        <div>🎥</div>
+                        <div class="emoji-large">🎥</div>
                         <div class="remove-file" onclick="removeFile('${sectionId}', ${index})">❌</div>
                     `;
                 }
