@@ -86,12 +86,6 @@
             border-radius: 5px;
             object-fit: cover;
         }
-        .file-preview video {
-            max-width: 100%;
-            max-height: 100%;
-            border-radius: 5px;
-            object-fit: cover;
-        }
         .file-preview .remove-file {
             position: absolute;
             top: 5px;
@@ -118,6 +112,12 @@
             position: absolute;
             left: 10px;
             color: white;
+        }
+        .file-note {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 5px;
+            text-align: center;
         }
     </style>
 </head>
@@ -152,6 +152,7 @@
             
             <!-- Загрузка файлов -->
             <label for="write-us-file" class="file-label">📎 Прикрепить фото или видео (максимум 3 файла)</label>
+            <div class="file-note">*Файлы прикреплять по одному</div>
             <input type="file" id="write-us-file" class="file-input" accept="image/*, video/*" onchange="handleFileUpload('write-us')" multiple>
             
             <!-- Превью файлов -->
@@ -168,6 +169,7 @@
         
         <!-- Загрузка файлов -->
         <label for="morning-file" class="file-label">📎 Прикрепить фото или видео (максимум 3 файла)</label>
+        <div class="file-note">*Файлы прикреплять по одному</div>
         <input type="file" id="morning-file" class="file-input" accept="image/*, video/*" onchange="handleFileUpload('morning')" multiple>
         
         <!-- Превью файлов -->
@@ -312,10 +314,7 @@
                     `;
                 } else if (file.type.startsWith('video/')) {
                     fileElement.innerHTML = `
-                        <video>
-                            <source src="${URL.createObjectURL(file)}" type="${file.type}">
-                            Ваш браузер не поддерживает видео.
-                        </video>
+                        <div>🎥</div>
                         <div class="remove-file" onclick="removeFile('${sectionId}', ${index})">❌</div>
                     `;
                 }
