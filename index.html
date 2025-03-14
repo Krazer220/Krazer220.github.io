@@ -222,21 +222,6 @@
 
 Для обратной связи нажмите кнопку <b>"Написать нам"</b>.`;
 
-        // Функция для создания превью видео (первый кадр)
-        function createVideoPreview(file, callback) {
-            const video = document.createElement('video');
-            video.src = URL.createObjectURL(file);
-            video.addEventListener('loadeddata', () => {
-                const canvas = document.createElement('canvas');
-                canvas.width = video.videoWidth;
-                canvas.height = video.videoHeight;
-                const ctx = canvas.getContext('2d');
-                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-                const imageUrl = canvas.toDataURL('image/jpeg');
-                callback(imageUrl);
-            });
-        }
-
         // Автоматическое растягивание textarea
         function autoResizeTextarea(textarea) {
             textarea.style.height = 'auto';
@@ -326,12 +311,13 @@
                         <div class="remove-file" onclick="removeFile('${sectionId}', ${index})">❌</div>
                     `;
                 } else if (file.type.startsWith('video/')) {
-                    createVideoPreview(file, (imageUrl) => {
-                        fileElement.innerHTML = `
-                            <img src="${imageUrl}" alt="Превью видео">
-                            <div class="remove-file" onclick="removeFile('${sectionId}', ${index})">❌</div>
-                        `;
-                    });
+                    fileElement.innerHTML = `
+                        <video controls>
+                            <source src="${URL.createObjectURL(file)}" type="${file.type}">
+                            Ваш браузер не поддерживает видео.
+                        </video>
+                        <div class="remove-file" onclick="removeFile('${sectionId}', ${index})">❌</div>
+                    `;
                 }
                 filePreview.appendChild(fileElement);
             });
@@ -389,7 +375,7 @@
                     // Формируем массив медиафайлов для отправки
                     const media = writeUsFiles.map((file, index) => {
                         return {
-                            type: file.type.startsWith('image/') ? 'photo' : 'document',
+                            type: file.type.startsWith('image/') ? 'photo' : 'video',
                             media: `attach://file_${index}`,
                             caption: index === 0 ? adminMessage : '', // Добавляем текст только к первому файлу
                             parse_mode: 'HTML'
@@ -483,7 +469,7 @@
                     // Формируем массив медиафайлов для отправки
                     const media = morningFiles.map((file, index) => {
                         return {
-                            type: file.type.startsWith('image/') ? 'photo' : 'document',
+                            type: file.type.startsWith('image/') ? 'photo' : 'video',
                             media: `attach://file_${index}`,
                             caption: index === 0 ? adminMessage : '', // Добавляем текст только к первому файлу
                             parse_mode: 'HTML'
