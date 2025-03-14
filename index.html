@@ -312,7 +312,7 @@
                     `;
                 } else if (file.type.startsWith('video/')) {
                     fileElement.innerHTML = `
-                        <video controls>
+                        <video>
                             <source src="${URL.createObjectURL(file)}" type="${file.type}">
                             Ваш браузер не поддерживает видео.
                         </video>
