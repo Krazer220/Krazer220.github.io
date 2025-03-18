@@ -119,9 +119,6 @@
             margin-top: 5px;
             text-align: center;
         }
-        .emoji-large {
-            font-size: 40px; /* Увеличиваем размер эмодзи */
-        }
     </style>
 </head>
 <body>
@@ -155,9 +152,8 @@
             
             <!-- Загрузка файлов -->
             <label for="write-us-file" class="file-label">📎 Прикрепить фото или видео (максимум 3 файла)</label>
-            <input type="file" id="write-us-file" class="file-input" accept="image/*, video/*" onchange="handleFileUpload('write-us')">
-            <!-- Надпись под кнопкой -->
             <div class="file-note">*Файлы прикреплять по одному</div>
+            <input type="file" id="write-us-file" class="file-input" accept="image/*, video/*" onchange="handleFileUpload('write-us')" multiple>
             
             <!-- Превью файлов -->
             <div id="write-us-preview" class="file-preview"></div>
@@ -173,9 +169,8 @@
         
         <!-- Загрузка файлов -->
         <label for="morning-file" class="file-label">📎 Прикрепить фото или видео (максимум 3 файла)</label>
-        <input type="file" id="morning-file" class="file-input" accept="image/*, video/*" onchange="handleFileUpload('morning')">
-        <!-- Надпись под кнопкой -->
         <div class="file-note">*Файлы прикреплять по одному</div>
+        <input type="file" id="morning-file" class="file-input" accept="image/*, video/*" onchange="handleFileUpload('morning')" multiple>
         
         <!-- Превью файлов -->
         <div id="morning-preview" class="file-preview"></div>
@@ -266,28 +261,29 @@
             const filePreview = document.getElementById(`${sectionId}-preview`);
 
             if (fileInput.files && fileInput.files.length > 0) {
-                const file = fileInput.files[0]; // Берем только один файл
-                const files = sectionId === 'write-us' ? writeUsFiles : morningFiles;
+                const newFiles = Array.from(fileInput.files);
+                const existingFiles = sectionId === 'write-us' ? writeUsFiles : morningFiles;
 
                 // Проверка общего количества файлов
-                if (files.length >= 3) {
+                if (existingFiles.length + newFiles.length > 3) {
                     tg.showAlert("Можно прикрепить не более 3 файлов.");
                     fileInput.value = ''; // Очищаем input
                     return;
                 }
 
-                // Проверка размера файла
-                if (file.size > 2 * 1024 * 1024 * 1024) { // Ограничение на 2 ГБ
-                    tg.showAlert(`Файл ${file.name} превышает допустимый размер (2 ГБ).`);
-                    fileInput.value = ''; // Очищаем input
-                    return;
+                // Проверка размера каждого файла
+                for (const file of newFiles) {
+                    if (file.size > 2 * 1024 * 1024 * 1024) { // Ограничение на 2 ГБ
+                        tg.showAlert(`Файл ${file.name} превышает допустимый размер (2 ГБ).`);
+                        return;
+                    }
                 }
 
-                // Добавляем файл к существующим
+                // Добавляем новые файлы к существующим
                 if (sectionId === 'write-us') {
-                    writeUsFiles.push(file);
+                    writeUsFiles = [...writeUsFiles, ...newFiles];
                 } else if (sectionId === 'morning') {
-                    morningFiles.push(file);
+                    morningFiles = [...morningFiles, ...newFiles];
                 }
 
                 // Отображаем превью
@@ -295,8 +291,8 @@
 
                 // Обновляем input файлов
                 const newFilesDataTransfer = new DataTransfer();
-                const filesArray = sectionId === 'write-us' ? writeUsFiles : morningFiles;
-                filesArray.forEach(file => newFilesDataTransfer.items.add(file));
+                const files = sectionId === 'write-us' ? writeUsFiles : morningFiles;
+                files.forEach(file => newFilesDataTransfer.items.add(file));
                 fileInput.files = newFilesDataTransfer.files;
             }
         }
@@ -318,7 +314,7 @@
                     `;
                 } else if (file.type.startsWith('video/')) {
                     fileElement.innerHTML = `
-                        <div class="emoji-large">🎥</div>
+                        <div>🎥</div>
                         <div class="remove-file" onclick="removeFile('${sectionId}', ${index})">❌</div>
                     `;
                 }
