@@ -13,6 +13,10 @@
             color: white;
             min-height: 100vh;
             margin: 0;
+            box-sizing: border-box;
+        }
+        * {
+            box-sizing: border-box;
         }
         .button {
             display: block;
@@ -30,20 +34,30 @@
         .button:hover {
             background-color: rgba(255, 255, 255, 0.3);
         }
-        textarea, input, select {
+        textarea {
             width: 100%;
-            padding: 10px;
+            padding: 15px;
             margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
             resize: none;
             font-size: 16px;
             background-color: rgba(255, 255, 255, 0.1);
             color: white;
-            overflow: hidden;
+            min-height: 100px;
         }
         textarea::placeholder {
-            color: rgba(255, 255, 255, 0.7);
+            color: rgba(255, 255, 255, 0.5);
+        }
+        input, select {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            font-size: 16px;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
         }
         .hidden {
             display: none;
@@ -53,7 +67,8 @@
         }
         .file-label {
             display: block;
-            padding: 10px;
+            padding: 15px;
+            margin: 10px 0;
             background-color: rgba(255, 255, 255, 0.2);
             border-radius: 10px;
             text-align: center;
@@ -63,10 +78,10 @@
             background-color: rgba(255, 255, 255, 0.3);
         }
         .file-preview {
-            margin-top: 10px;
+            margin: 10px 0;
             display: flex;
             flex-wrap: wrap;
-            gap: 5px;
+            gap: 10px;
         }
         .file-preview .file-preview-item {
             background-color: rgba(255, 255, 255, 0.2);
@@ -140,31 +155,34 @@
         @keyframes spin {
             to { transform: translateY(-50%) rotate(360deg); }
         }
+        h3 {
+            margin: 15px 0 10px 0;
+        }
     </style>
 </head>
 <body>
     <div id="main-menu">
-        <button class="button" onclick="showSection('write-us')">📩 Написать нам</button>
-        <button class="button" onclick="showSection('morning')">🌅 Утро</button>
-        <button class="button" onclick="handleVacancies()">💼 Вакансии</button>
-        <button class="button" onclick="handleAbout()">❓ О проекте</button>
+        <button class="button" id="write-us-btn">📩 Написать нам</button>
+        <button class="button" id="morning-btn">🌅 Утро</button>
+        <button class="button" id="vacancies-btn">💼 Вакансии</button>
+        <button class="button" id="about-btn">❓ О проекте</button>
     </div>
 
     <!-- Раздел "Написать нам" -->
     <div id="write-us" class="hidden">
-        <button class="button back-button" onclick="showSection('main-menu')">Назад</button>
+        <button class="button back-button" id="write-us-back">Назад</button>
         
         <!-- Выбор темы -->
         <div id="topic-selection">
             <h3>Выберите тему:</h3>
-            <button class="button" onclick="selectTopic('🏠 ЖКХ')">🏠 ЖКХ</button>
-            <button class="button" onclick="selectTopic('🛣️ Дороги')">🛣️ Дороги</button>
-            <button class="button" onclick="selectTopic('🎖️ СВО')">🎖️ СВО</button>
-            <button class="button" onclick="selectTopic('🏢 МФЦ')">🏢 МФЦ</button>
-            <button class="button" onclick="selectTopic('👥 Социальная сфера')">👥 Социальная сфера</button>
-            <button class="button" onclick="selectTopic('🚌 Общественный транспорт')">🚌 Общественный транспорт</button>
-            <button class="button" onclick="selectTopic('❓ Другое')">❓ Другое</button>
-            <button class="button" onclick="selectTopic('📢 Реклама')">📢 Реклама</button>
+            <button class="button" id="topic-housing">🏠 ЖКХ</button>
+            <button class="button" id="topic-roads">🛣️ Дороги</button>
+            <button class="button" id="topic-svo">🎖️ СВО</button>
+            <button class="button" id="topic-mfc">🏢 МФЦ</button>
+            <button class="button" id="topic-social">👥 Социальная сфера</button>
+            <button class="button" id="topic-transport">🚌 Общественный транспорт</button>
+            <button class="button" id="topic-other">❓ Другое</button>
+            <button class="button" id="topic-ads">📢 Реклама</button>
         </div>
 
         <!-- Поле для ввода текста и загрузки файлов -->
@@ -174,29 +192,29 @@
             <!-- Загрузка файлов -->
             <label for="write-us-file" class="file-label">📎 Прикрепить фото или видео (максимум 3 файла)</label>
             <div class="file-note">*Максимальный размер файла - 50 МБ. Форматы: JPG, PNG, MP4</div>
-            <input type="file" id="write-us-file" class="file-input" accept="image/jpeg,image/png,video/mp4" onchange="handleFileUpload('write-us')" multiple>
+            <input type="file" id="write-us-file" class="file-input" accept="image/jpeg,image/png,video/mp4" multiple>
             
             <!-- Превью файлов -->
             <div id="write-us-preview" class="file-preview"></div>
             
-            <button class="button" id="write-us-submit" onclick="sendWriteUsMessage()">Отправить</button>
+            <button class="button" id="write-us-submit">Отправить</button>
         </div>
     </div>
 
     <!-- Раздел "Утро" -->
     <div id="morning" class="hidden">
-        <button class="button back-button" onclick="showSection('main-menu')">Назад</button>
+        <button class="button back-button" id="morning-back">Назад</button>
         <textarea id="morning-message" placeholder="Напишите ваше сообщение..."></textarea>
         
         <!-- Загрузка файлов -->
         <label for="morning-file" class="file-label">📎 Прикрепить фото или видео (максимум 3 файла)</label>
         <div class="file-note">*Максимальный размер файла - 50 МБ. Форматы: JPG, PNG, MP4</div>
-        <input type="file" id="morning-file" class="file-input" accept="image/jpeg,image/png,video/mp4" onchange="handleFileUpload('morning')" multiple>
+        <input type="file" id="morning-file" class="file-input" accept="image/jpeg,image/png,video/mp4" multiple>
         
         <!-- Превью файлов -->
         <div id="morning-preview" class="file-preview"></div>
         
-        <button class="button" id="morning-submit" onclick="sendMorningMessage()">Отправить</button>
+        <button class="button" id="morning-submit">Отправить</button>
     </div>
 
     <script>
@@ -208,16 +226,16 @@
             window.location.href = 'https://t.me/your_bot_username';
         }
 
-        const BOT_TOKEN = '7999439396:AAHWSknp4PeiTThudMUJpzYVwe3Dz0enUy8'; // Токен вашего бота
-        const ADMIN_CHAT_ID = -4658083954; // ID чата администратора
+        const BOT_TOKEN = '7999439396:AAHWSknp4PeiTThudMUJpzYVwe3Dz0enUy8';
+        const ADMIN_CHAT_ID = -4658083954;
         const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50 МБ
         const MAX_FILES = 3;
 
-        let selectedTopic = ''; // Выбранная тема
-        let writeUsFiles = []; // Массив для файлов из раздела "Написать нам"
-        let morningFiles = []; // Массив для файлов из раздела "Утро"
+        let selectedTopic = '';
+        let writeUsFiles = [];
+        let morningFiles = [];
 
-        // Тексты для разделов "Вакансии" и "О проекте"
+        // Тексты для разделов
         const vacanciesText = `💼 <b>Вакансии в лучшей команде республики!</b> 💼
 
 Мы расширяемся и ищем талантливых профессионалов в наш дружный коллектив! Если ты готов развиваться, работать в команде единомышленников и делать крутые проекты, то тебе к нам!  
@@ -252,6 +270,60 @@
         tg.enableClosingConfirmation();
         tg.MainButton.hide();
 
+        // Получаем все элементы DOM
+        const writeUsBtn = document.getElementById('write-us-btn');
+        const morningBtn = document.getElementById('morning-btn');
+        const vacanciesBtn = document.getElementById('vacancies-btn');
+        const aboutBtn = document.getElementById('about-btn');
+        const writeUsBack = document.getElementById('write-us-back');
+        const morningBack = document.getElementById('morning-back');
+        
+        // Тематические кнопки
+        const topicButtons = {
+            housing: document.getElementById('topic-housing'),
+            roads: document.getElementById('topic-roads'),
+            svo: document.getElementById('topic-svo'),
+            mfc: document.getElementById('topic-mfc'),
+            social: document.getElementById('topic-social'),
+            transport: document.getElementById('topic-transport'),
+            other: document.getElementById('topic-other'),
+            ads: document.getElementById('topic-ads')
+        };
+
+        // Кнопки отправки
+        const writeUsSubmit = document.getElementById('write-us-submit');
+        const morningSubmit = document.getElementById('morning-submit');
+
+        // Input файлов
+        const writeUsFileInput = document.getElementById('write-us-file');
+        const morningFileInput = document.getElementById('morning-file');
+
+        // Навешиваем обработчики событий
+        writeUsBtn.addEventListener('click', () => showSection('write-us'));
+        morningBtn.addEventListener('click', () => showSection('morning'));
+        vacanciesBtn.addEventListener('click', handleVacancies);
+        aboutBtn.addEventListener('click', handleAbout);
+        writeUsBack.addEventListener('click', () => showSection('main-menu'));
+        morningBack.addEventListener('click', () => showSection('main-menu'));
+        
+        // Обработчики тем
+        topicButtons.housing.addEventListener('click', () => selectTopic('🏠 ЖКХ'));
+        topicButtons.roads.addEventListener('click', () => selectTopic('🛣️ Дороги'));
+        topicButtons.svo.addEventListener('click', () => selectTopic('🎖️ СВО'));
+        topicButtons.mfc.addEventListener('click', () => selectTopic('🏢 МФЦ'));
+        topicButtons.social.addEventListener('click', () => selectTopic('👥 Социальная сфера'));
+        topicButtons.transport.addEventListener('click', () => selectTopic('🚌 Общественный транспорт'));
+        topicButtons.other.addEventListener('click', () => selectTopic('❓ Другое'));
+        topicButtons.ads.addEventListener('click', () => selectTopic('📢 Реклама'));
+
+        // Обработчики отправки
+        writeUsSubmit.addEventListener('click', sendWriteUsMessage);
+        morningSubmit.addEventListener('click', sendMorningMessage);
+
+        // Обработчики загрузки файлов
+        writeUsFileInput.addEventListener('change', () => handleFileUpload('write-us'));
+        morningFileInput.addEventListener('change', () => handleFileUpload('morning'));
+
         // Автоматическое растягивание textarea
         function autoResizeTextarea(textarea) {
             textarea.style.height = 'auto';
@@ -261,19 +333,20 @@
         // Привязка автоматического растягивания ко всем textarea
         document.querySelectorAll('textarea').forEach(textarea => {
             textarea.addEventListener('input', () => autoResizeTextarea(textarea));
-            autoResizeTextarea(textarea); // Инициализация при загрузке
+            autoResizeTextarea(textarea);
         });
 
         // Функция для показа секций
         function showSection(sectionId) {
-            document.querySelectorAll('div').forEach(div => {
-                if (div.id && div.id.startsWith('main-menu') || div.id.startsWith('write-us') || div.id.startsWith('morning')) {
-                    div.classList.add('hidden');
-                }
-            });
+            // Скрываем все основные секции
+            document.getElementById('main-menu').classList.add('hidden');
+            document.getElementById('write-us').classList.add('hidden');
+            document.getElementById('morning').classList.add('hidden');
+            
+            // Показываем нужную секцию
             document.getElementById(sectionId).classList.remove('hidden');
 
-            // Сброс выбора темы при переходе в раздел "Написать нам"
+            // Дополнительная логика для "Написать нам"
             if (sectionId === 'write-us') {
                 selectedTopic = '';
                 document.getElementById('topic-selection').classList.remove('hidden');
@@ -290,7 +363,7 @@
 
         // Обработка загрузки файлов
         function handleFileUpload(sectionId) {
-            const fileInput = document.getElementById(`${sectionId}-file`);
+            const fileInput = sectionId === 'write-us' ? writeUsFileInput : morningFileInput;
             const filePreview = document.getElementById(`${sectionId}-preview`);
 
             if (fileInput.files && fileInput.files.length > 0) {
@@ -333,7 +406,7 @@
 
         // Обновление input файлов
         function updateFileInput(sectionId) {
-            const fileInput = document.getElementById(`${sectionId}-file`);
+            const fileInput = sectionId === 'write-us' ? writeUsFileInput : morningFileInput;
             const newFilesDataTransfer = new DataTransfer();
             const files = sectionId === 'write-us' ? writeUsFiles : morningFiles;
             
@@ -346,7 +419,7 @@
             const filePreview = document.getElementById(`${sectionId}-preview`);
             const files = sectionId === 'write-us' ? writeUsFiles : morningFiles;
 
-            filePreview.innerHTML = ''; // Очищаем превью
+            filePreview.innerHTML = '';
             files.forEach((file, index) => {
                 const fileElement = document.createElement('div');
                 fileElement.classList.add('file-preview-item');
@@ -583,6 +656,9 @@
                 console.error("Ошибка при отправке сообщения:", error);
             }
         }
+
+        // Глобальные функции для вызова из HTML
+        window.removeFile = removeFile;
 
         tg.ready();
     </script>
