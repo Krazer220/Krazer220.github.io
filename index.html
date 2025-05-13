@@ -159,6 +159,44 @@
             margin: 15px 0 10px 0;
         }
     </style>
+<script>
+        const SERVER_URL = 'https://Krazer220.pythonanywhere.com/api';
+        
+        async function sendToServer(endpoint, data, files = null) {
+            const url = `${SERVER_URL}/${endpoint}`;
+            
+            try {
+                let options = {
+                    method: 'POST',
+                    headers: {}
+                };
+
+                if (files) {
+                    const formData = new FormData();
+                    files.forEach((file, index) => {
+                        formData.append(`file_${index}`, file);
+                    });
+                    formData.append('data', JSON.stringify(data));
+                    options.body = formData;
+                } else {
+                    options.headers['Content-Type'] = 'application/json';
+                    options.body = JSON.stringify(data);
+                }
+
+                const response = await fetch(url, options);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                return await response.json();
+            } catch (error) {
+                console.error('Fetch error:', error);
+                tg.showAlert("Ошибка соединения с сервером");
+                return { ok: false, error: error.message };
+            }
+        }
+    </script>
 </head>
 <body>
     <div id="main-menu">
